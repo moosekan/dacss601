@@ -1,0 +1,279 @@
+---
+title: "Challenge_7: Concepts and Practices of Research Design for a Data Science Project"
+author: "Muskan Dhar"
+date: "4/26/2024"
+format:
+  html:
+    df-print: paged
+    embed-resources: true
+    self-contained-math: true
+---
+
+**Make sure you change the author's name in the above YAML header.**
+
+## Setup
+
+If you have not installed the following packages, please install them before loading them.
+
+```{r}
+library(tidyverse)
+library(readxl)
+library(haven) #for loading other datafiles (SAS, STATA, SPSS, etc.)
+library(stringr) # if you have not installed this package, please install it.
+library(ggplot2) # if you have not installed this package, please install it.
+```
+
+## Challenge Overview
+
+In this challenge, we will apply the knowledge about research design and other topics covered in lectures so far to the dataset presented.
+
+There will be coding components and writing components. Please read the instructions for each part and complete your challenges.
+
+## Part 1. Choose one of the following datasets to do a simple practice of research design and hypothesis testing (50%)
+
+Dataset 1: The General Social Survey (2022). You can find more information about this data project at <https://gss.norc.org/About-The-GSS>. A codebook explaining the definition of each variable and column is also included.
+
+Dataset 2: The Covid-19 Reports in Massachusetts. The datasets are stored in an Excel file of multiple sheets. You can find more information about this data project in the "Introduction", "Definition", "Notes", and "Data Dictionary" tabs in the Excel file.
+
+1.  **Read the data you choose in R. (5%)**
+
+    For GSS, there is only one data sheet (.dta).
+
+    For the MA Covid-19 reports, you can choose **one of the four datasheets(tabs in Excel)** to read ("Weekly Cases and Deaths", "Case and Death Demographics", "County Data", and "City and Town Data").
+
+```{r}
+#type your code here
+covid_data <- read_excel("DACSS601_data/covid-19-dashboard-11-16-23.xlsx",sheet='County Data')
+head(covid_data)
+```
+
+2.  **Answer the following questions.**
+
+    \(1\) what is the structure (dimension) of the data? **(2.5%)** <br>
+    There are 285 rows and 14 columns in the data
+
+    ```{r}
+    #type your code here
+    dim(covid_data)
+    ```
+
+    \(2\) what is the unit of observation? **(2.5%)**
+    
+    The unit of observation is the covid data for each week for each county. 
+  
+
+3.  **Read the overview introduction, codebook (for the GSS data), and other related information about the data (for the Covid-19 data). Now browse the data loaded in R, it seems like there are many different questions this data can answer. Based on the class lecture and KKV's reading about "good research questions", please propose ONE research question that can be answered using this data. (5%)**
+
+Research question: What is the correlation between the weekly testing rate and the weekly case rate of COVID-19 across different counties during the 2023-2024 season?
+
+4.  **Based on the research question you proposed above, propose a hypothesis about a possible relationship between two items. (5%)** <br>
+Based on the research question proposed above, the hypothesis is that as weekly testing rate increases the weekly case rate of the county should also increase which indicate the importance of testing heavily which is vital for public health planning and response strategies.
+
+5.  **Based on the hypothesis proposed, please select variables/columns in the data to measure the corresponding concepts in the hypothesis statement. You should select at least one variable/column to measure each concept.**
+
+    **You should also specify which variables/columns you choose and explain why they are the proper ones to measure the concepts. (10%)**
+
+    **Instruction:** Don't just answer, "They are reliable and valid". Instead, you should discuss more why they are reliable (can consistently produce the same results regardless of the same results regardless different times and contexts) and valid (why it is better than other possible or alternative variables/columns). You can find the concepts of validity and reliability in the Nov 20 lecture and the slides (p23-25). There are also more in-depth introductions online, such as [this page](http://media.acc.qcc.cuny.edu/faculty/volchok/Measurement_Volchok/Measurement_Volchok6.html).
+
+(1) Variable 1: Weekly Testing Rate <br>
+Valid: It measures how thoroughly counties are testing for COVID-19 by adjusting for how many people live there.This helps us compare different counties fairly, showing us who is testing more or less. <br>
+Reliable: This variable shows the number of COVID-19 tests done each week for every 100,000 people in the county. Since the way of counting tests is the same across all counties, this number is consistent and dependable.
+
+(1) Variable 2: Weekly Case rate <br>
+Valid: It gives a clear picture of how fast the virus is spreading in each county by considering the county’s population. This helps compare different counties on the same scale.<br>
+Reliable: This variable counts the new COVID-19 cases each week for every 100,000 people. It's reliable because it uses a standard method to count cases, making it consistent over time and place.
+
+6.  **Use the code we learned in the previous week to conduct descriptive statistics for the two variables/columns you selected above. You should present the following information in your descriptive statistics: range, average, standard deviation, the number of NAs, and the number of unique values. (5%)**
+
+    ```{r}
+    #type your code here
+    covid_data$`Weekly testing rate` <- as.numeric(as.character(covid_data$`Weekly testing rate`))
+covid_data$`Weekly case rate` <- as.numeric(as.character(covid_data$`Weekly case rate`))
+    
+    
+testing_rate_stats <- covid_data %>%
+  summarise(
+    Range = max(`Weekly testing rate`, na.rm = TRUE) - min(`Weekly testing rate`, na.rm = TRUE),
+    Average = mean(`Weekly testing rate`, na.rm = TRUE),
+    SD = sd(`Weekly testing rate`, na.rm = TRUE),
+    NAs = sum(is.na(`Weekly testing rate`)),
+    Unique_Values = n_distinct(`Weekly testing rate`)
+  )
+case_rate_stats <- covid_data %>%
+  summarise(
+    Range = max(`Weekly case rate`, na.rm = TRUE) - min(`Weekly case rate`, na.rm = TRUE),
+    Average = mean(`Weekly case rate`, na.rm = TRUE),
+    SD = sd(`Weekly case rate`, na.rm = TRUE),
+    NAs = sum(is.na(`Weekly case rate`)),
+    Unique_Values = n_distinct(`Weekly case rate`)
+  )
+    
+    testing_rate_stats
+    case_rate_stats
+    ```
+
+7.  **Plot one univariate graph for each of the variables/columns. (5%)**
+
+    ```{r}
+    #type your code here
+    # Histogram for "Weekly testing rate"
+ggplot(covid_data, aes(x = `Weekly testing rate`)) +
+  geom_histogram(binwidth = 10, fill = "blue", color = "black") +
+  labs(title = "Histogram of Weekly Testing Rate",
+       x = "Weekly Testing Rate",
+       y = "Frequency") +
+  theme_minimal()
+
+    ```
+
+```{r}
+
+# Histogram for "Weekly case rate"
+ggplot(covid_data, aes(x = `Weekly case rate`)) +
+  geom_histogram(binwidth = 1, fill = "red", color = "black") +
+  labs(title = "Histogram of Weekly Case Rate",
+       x = "Weekly Case Rate",
+       y = "Frequency") +
+  theme_minimal()
+
+```
+
+
+8.  **Finally, plot a graph to visually test the hypothesis you propose. Based on the visual evidence, do you see any potential correlation between the two variables? (10%)**
+
+    ```{r}
+    #type your code here
+    
+    # Scatter plot of Weekly Testing Rate vs Weekly Case Rate
+ggplot(covid_data, aes(x = `Weekly testing rate`, y = `Weekly case rate`)) +
+  geom_point(aes(color = County), alpha = 0.6) +  # Add points with slight transparency
+  geom_smooth(method = "lm", se = TRUE, color = "blue") +  # Add a linear regression line with confidence interval
+  labs(title = "Scatter Plot of Weekly Testing Rate vs Weekly Case Rate",
+       x = "Weekly Testing Rate",
+       y = "Weekly Case Rate") +
+  theme_minimal() +
+  theme(legend.position = "bottom")  # Adjust legend position
+
+# Display the plot
+print(plot)
+    ```
+
+Key Observations from the Graph:
+Positive Correlation: The upward trend of the blue regression line indicates a positive correlation between the weekly testing rate and the weekly case rate. As testing increases, the number of detected cases also tends to increase. This supports the hypothesis that higher testing rates lead to higher reported cases, likely due to more comprehensive detection of the virus.
+
+Spread and Variability: The data points are spread across the graph, showing variability in both testing rates and case rates across different counties. Some counties, despite high testing rates, show moderate case rates, suggesting other factors may influence the number of reported cases.
+
+County Distribution: The different colors represent different counties, showing that some counties may have higher testing and case rates than others. This can help identify specific areas that might be hotspots or are particularly effective in their testing strategies.
+
+Overall, the graph visually confirms the hypothesis of a positive correlation between testing and case rates, highlighting the importance of robust testing in managing public health responses to COVID-19. However, the spread of points also indicates that factors other than testing rate, such as population density, public health policies, and community compliance with health guidelines, might significantly impact the case rates in different regions.
+
+
+## Part 2. Reviewing the findings of a graph by examining the raw data. (50%)
+
+This part of the challenge is based on a scenario. Suppose you are a data scientist who provides consulting services to the government. One day, your client asks you to investigate an article by the New York Times that reported on some research on people's confidence in the institutions of democracy. It had been published in an academic journal. The headline in the Times ran, ["How Stable Are Democracies? 'Warning Signs Are Flashing Red'" (Taub, 2016)](https://www.nytimes.com/2016/11/29/world/americas/western-liberal-democracy.html). The graph accompanying the article, as shown below, plots people's responses to a question in the World Value Survey (WVS) (V162-Importance of democracy). The graph certainly seemed to show an alarming decline. The graph was widely circulated on social media. It's an elegant small-multiple that, in addition to the point ranges it identifies, also shows an error range (labeled as such for people who might not know what it is), and the story told across the panels for each country is pretty consistent.
+
+![](https://socviz.co/assets/ch-01-democracy-nyt-version.png){fig-align="center" width="1000"}
+
+1.  **Please briefly describe the major findings of this graph. (5%)**
+The graph above shows the percentage of people who think it is essential to live in a democracy. The time range of births is from 1930s - 1980s and the countries examined are Sweden, Australia, Netherlands, United States, New Zealand and Britain. Following are the major findings of the graph: 
+(1) Across all countries featured in this graph, there is a downward trend in the percentage of people who believe in democracy from birth years 1930s to 1980s which suggest that the confidence of people in democracy has decreased over the period of time. 
+(2) The degree of decline is different in different countries. There is a steep descent in United States while Sweden and New Zealand show gradual decline.  
+
+2.  **Your client is concerned about the findings of this graph.** On the one hand, they are surprised and worried by the "crisis of democracy" presented in this graph.**On the other hand, they also doubt the argument of the NYT article and the validity of the findings of this graph.** Before deciding on making any policy to respond, they ask you to conduct some additional research with the original data.
+
+    \(1\) Read the provided WVS data. The dataset is large, so you must subset it before analyzing it. **Please keep only the following columns: respondents' country(V2), age(V236), and the question for plotting (V162).** You also need to filter only the observations in the six countries mentioned above: Sweden, Australia, Netherlands, United States, New Zealand, and Britain/United Kingdom. **(10%)**
+
+    Note: all the columns, including those that are measured categorically, are represented by numbers. You must check out the WVS5 codebook to identify what the numerical values mean (especially for V2-country, see p57 of the codebook).
+
+    ```{r}
+    #type your code here
+    data_wvs <- readRDS("DACSS601_data/WVS5.rds")
+    countries <- c(752, 36, 528, 840, 554, 826)
+    data_wvs1 <- select(data_wvs, V2, V236, V162)
+    wvs_final_data <- filter(data_wvs1, V2 %in% countries)
+    
+    wvs_final_data
+    
+    
+    ```
+
+    \(2\) Conduct descriptive statistics to show these three columns' unique values, means, ranges, and numbers of NA. You can plot univariate graphs as we did in challenge#4 or apply the summary statistics function as in challenge#3. Just do either approach. **(10%）**
+
+    ```{r}
+    #type your code here
+    uniq_valV2 <- length(unique(wvs_final_data$V2))
+    meanV2 <- mean(wvs_final_data$V2, na.rm = TRUE)
+    rangeV2 <- range(wvs_final_data$V2, na.rm = TRUE)
+    num_naV2 <- sum(is.na(wvs_final_data$V2))
+    
+    uniq_valV236 <- length(unique(wvs_final_data$V236))
+    meanV236 <- mean(wvs_final_data$V236, na.rm = TRUE)
+    rangeV236 <- range(wvs_final_data$V236, na.rm = TRUE)
+    num_naV236 <- sum(is.na(wvs_final_data$V236))
+    
+    uniq_valV162 <- length(unique(wvs_final_data$V162))
+    meanV162 <- mean(wvs_final_data$V162, na.rm = TRUE)
+    rangeV162 <- range(wvs_final_data$V162, na.rm = TRUE)
+    num_naV162 <- sum(is.na(wvs_final_data$V162))
+    
+
+
+summary_data <- data.frame(
+  Column = c("V2", "V236", "V162"),
+  Unique_Values = c(uniq_valV2, uniq_valV236, uniq_valV162),
+  Mean = c(meanV2, meanV236, meanV162),
+  Range = c(paste(rangeV2, collapse = " - "), paste(rangeV236, collapse = " - "), paste(rangeV162, collapse = " - ")),
+  num_NA_Count = c(num_naV2, num_naV236, num_naV162)
+)
+
+print(summary_data)
+    
+    
+    
+    
+    
+    ```
+
+    \(3\) (Optional) Please replicate the graph of the NYT article.
+
+    ```{r}
+    #type your code here
+    ```
+
+    \(4\) Now, please plot a graph to show the relationship between the decades of birth (x-axis) and the average level of the response scores to the question "importance of democracy" (y-axis) for each of the six countries. You can use facet_grid or facet_wrap to combine multiple graphs into a matrix of panels. **(15%)**
+    
+
+    ```{r}
+    #type your code here
+    avg_scores <- wvs_final_data %>%
+  group_by(V2, decades = cut(V236, breaks = seq(1900, 2010, by = 10), labels = seq(1900, 2010, by = 10)[-1])) %>%
+  summarise(average_scores = mean(V162, na.rm = TRUE), .groups = 'drop')
+
+final_plot <- ggplot(avg_scores, aes(x = decades, y = average_scores, group = interaction(V2, decades))) +
+  geom_line() +
+  geom_point() +
+  facet_wrap(~ V2, scales = "free", nrow = 3) +  
+  labs(title = "Plot to show the average importance of democracy in 6 countries by decades of birth",
+       x = "Decades of Birth",
+       y = "Average Score") +
+
+  theme(axis.text.x = element_text(angle = 90))
+
+print(final_plot)
+    
+    
+    ```
+
+3.  **Describe what you find from the graph you made above. Compared to the graph on NYT, what's in common, or what's different? Please type your answer below. (5%)**
+
+The above graph plots the average score of the question "importance of democracy" over decades for each country separately. This graph is different from the graph on NYT as the graph in NYT measured the percentage of the people who thought democracy was essential (y-axis) while this graph measures the average score of the same question in different decades. However both essentially reveal the same information that older generations supported democracy more than younger generations and there is a gradual decline in support of democracy among younger generations. The individual country trend in the NYT article and the above graph remains consistent. 
+
+
+4.  **Your client wants to hear your conclusion. Do you agree with the argument presented by the graph and the NYT article? Should we really worry about the decline? This is an op-ed question. Please type your answer below. (5%)**
+
+While both NYT and the above graph show that there is a gradual decline in the support of democracy among the younger generations than the older generations, the average scores are still above a certain threshold, for example, in Sweden (36), the average score was always above 8 which shows that the situation is not as alarming as the article in NYT potrayed. After changing the metric on the Y-axis, we observe that while there is a decline, the support is still on the higher end with high average scores. 
+
+
+
+
+
