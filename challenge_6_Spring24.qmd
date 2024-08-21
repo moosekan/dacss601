@@ -1,0 +1,129 @@
+---
+title: "Challenge_6: Basic Principles of Data-Driven Story-telling"
+author: "Muskan Dhar"
+date: "4/15/2024"
+format:
+  html:
+    df-print: paged
+    embed-resources: true
+    self-contained-math: true
+---
+
+**Make sure you change the author's name in the above YAML header.**
+
+## Challenge Overview
+
+In this challenge, we will mainly apply the principles we learned from Jane Miller's book in practice. You will review multiple examples of data description and presentation in text, table/number, and charts/figures. Please read the instructions for each part and complete your challenges.
+
+**For all the screenshots, images, or tables mentioned in the questions, please see the Challenge_6_Spring24.html file. You don't need to include any of these items in your rendered challenge file.**
+
+## Part 1. Simple Applications {#part-1.-the-ufo-sightings-data-50}
+
+1.  **Recall Jane Miller's Ws mentioned in Chapter #2. One of the W's (Who, What, When, and Where, Why) is missing from each of the following table descriptions. Rewrite each sentence to include that information. (10%)**
+
+    ![](Ch1_table2b.png)
+
+    a.  "Germany did the best at the 2002 Winter Olympics, with 35 medals, compared to 34 for the United States, 24 for Norway, and 17 for Canada." <br>
+    At the 2002 Winter Olympics, Germany outperformed all other nations by finishing at the top of the medal table with a total of 35 medals (12 Gold, 16 Silver, 7 Bronze). They were followed by the United States, which captured 34 medals (10 Gold, 13 Silver, 11 Bronze), Norway with 24 medals (11 Gold, 7 Silver, 6 Bronze), and Canada, which took home 17 medals (6 Gold, 3 Silver, 8 Bronze).
+
+    b.  "Gold, silver, and bronze medals each accounted for about one-third of the medal total." <br>
+    At the 2002 Winter Olympics, the combined total of gold, silver, and bronze medals won by Germany, the United States, Norway, and Canada was 110. Each type of medal—gold (39), silver (39), and bronze (32)—represented approximately one-third of their total medal count, illustrating a relatively even distribution among the three medal types for these four countries.
+
+    c.  "At the 2002 Winter Olympics, the United States won more medals than all other countries, followed by Canada, Germany, and Norway." <br>
+    At the 2002 Winter Olympics, the United States secured more bronze medals than any other country, earning a total of 11. They were followed by Canada with 8 bronze medals, Germany with 7, and Norway with 6, making the United States the leading nation in terms of bronze medal count during the games.
+
+2.  **For each of the following situations, specify whether you would use prose of text, a table of numbers, or a particular type of chart/figure. Explain why you chose this way to present the data. (10%)**
+
+    a.  Statistics on five types of air pollutants in the 10 largest US cities for a government report <br>
+    For presenting this data a table would be sufficient. Each row of the table will be a unique city and the columns will be the five air pollutants. Thus the dimension of the table will be 10 (rows) x 5 (columns). This representation is visually very clear for this type of data and is easily readable. 
+    
+    b.  Trends in the value of three stock market indices over one year for a web page <br>
+    To represent this type of data, a line chart would be quite effective. It can clearly show the ups and downs in the stock market indices over the period of an year which can help viewers visualize the performance trends of the different stock indices.
+    
+    c.  Notification to other employees in your corporation of a change in shipping fees <br>
+    A prose of text is sufficient to represent this data. It can contain the necessary information succinct enough to be sent as a notification to the employees and can contain the reason and effective date for the change in shipping fees.
+    
+    d.  Distribution of voter preferences for grade-level composition of a new middle school (grades 5--8, grades 6--8, or grades 6--9) for a presentation at a local school board meeting <br>
+      A bar chart would be a good way of representing this type of data. For each grade level we can show the distribution of the votes as a bar chart. It is preferable because it's a very straightforward comparsion between different levels.
+    
+    e.  National estimates of the number of uninsured among part-time and full-time workers for an introductory section of an article analyzing effects of employment on insurance coverage in New York City <br>
+    A combination of prose of text and a bar graph can be a good representation of this data type. The bar plot can help in visually representing the number of uninsured among part time and full time workers and the prose of text can talk about the content of the article about insurance and the how employment effects the insurance coverage.
+    
+
+3.  **Read the sentences below. What additional information would someone need in order to answer the associated question? (10%)**
+
+    a.  "Brand X costs twice as much as Brand Q. Can I afford Brand X?" <br>
+    We need to know the budget that the person has and the price of Brand Q so that we can calculate the cost of Brand X. If the budget of the person is more than cost of Brand X then he/she can afford brand X else not. 
+    b.  "My uncle is 6'6" tall? Will he fit in my new car?" <br>
+    We need to know the dimensions of the car. Particularly, we would be interested in the legroom and headroom of the car. 
+    c.  "New Diet Limelite has 25% fewer calories than Diet Fizzjuice. How much faster will I lose weight on Diet Limelite?"<br>
+    We need to know the relation between rate of losing weight and calories consumed whether they are directly proportional or inversely proportional. 
+    d.  "It has been above 25 degrees every day. We're really having a warm month, aren't we?" <br>
+    We need to know the typical average temperatures during the month from the previous years and also whether 25 degrees is in celsius or Fahrenheit. 
+
+4.  **Indicate whether each of the following sentences correctly reflects table 4B. If not, rewrite the sentence so that it is correct. Check both the correctness and completeness of these sentences. (10%)**
+
+    Note: According to [Wikipedia](https://en.wikipedia.org/wiki/Voter_turnout), " In political science, voter turnout is the participation rate (often defined as those who cast a ballot) of a given election. This is typically the percentage of registered, eligible, or all voting-age people."
+
+    ![](Ch5_table4b.png)
+
+    a.  Between 1964 and 1996, there was a steady decline in voter participation.<br>
+    This statement is reflected incorrect. The correct statement is: Between 1964 and 1996, voter turnout didn't consistently decrease every year. Initially, from 1964, with a voter participation rate of 95.8%, there was a general downward trend until 1988, when the rate hit 72.5%. However, this trend was interrupted by a surge in 1992, with turnout increasing to 78.2%, before dropping again to 63.4% in 1996. <br>
+    
+    b.  Voter turnout was better in 1996 (63.4%) than in 1964 (61.9%).<br>
+    The statement is reflected incorrectly. The correct sentence is: Voter turnout, measured as the percentage of votes cast by registered voters, was higher in 1964, at 95.8%, compared to a lower rate of 63.4% in 1996. <br>
+    
+    c.  The majority of all registered voters participated in the 1964 US presidential election. <br>
+    The sentence accurately reflects Table 4B: The highest percentage of votes cast by registered voters was recorded in 1964, at 95.8%. <br>
+    d.  The best year for voter turnout was 1992, with 104,600 people voting.<br>
+    This sentence is incorrectly reflected.The corrected version is: The peak year for voter turnout, in terms of the ratio of total votes to registered voters, was 1964, showing a 95.8% turnout. Although, the year that witnessed the highest number of cast votes, in thousands, was 1992, with 104,600 thousand votes being recorded.
+    
+    e.  A higher percentage of the voting-age population was registered to vote in 1996 than in 1964.<br>
+    This sentence is reflected incorrectly.The correct statement should be: A higher percentage of the voting age population was registered to vote in 1996 (47.2%) than in 1964 (61.9%).
+
+5.  **Identify terms that need to be defined or restated for a non-technical audience without much knowledge about the topic or statistical method. You don't need to explain these terms (you don't need to know any of the statistical methods mentioned).** **Just identify them. (10%)**
+
+    a\. "According to the latest study based on the [VDem Dataset](https://v-dem.net/data/the-v-dem-dataset/), the average Rule of Law score is statistically higher in democratic countries than non-democratic countries based on a t-test (p = 0.01)." <br>
+    For a non-technical audience, they need to know about average Rule of Law score and t-test (p = 0.01).
+
+    b\. " According to the logistic regression results in the screenshot below, we can see a positive correlation between household income and the vote choice for G.W. Bush, with a positive coefficient (log-odd = 0.33). " <br>
+    For a non-technical audience, they need to know about logistic regressionm positive correlation and positive coefficient (log-odd = 0.33).
+
+    ![](bushvote.png)
+
+## Part 2. Practical Applications
+
+1.  **Suppose you work as a data analyst in the music-producing industry. One day, you get a data report that studies the popularity of different genres of music. The following scatter plot is presented to you. There is no text description for either this table or the data. (25%)**
+
+    ![](example_project.png)
+
+    \(1\) What information can you describe or summarize based on the current graph? (10%) <br>
+    Based on the given scatter plot we can observe that x-axis represents the values of variable_1 and y-axis represents pop. Also for the initial values of variable_1 there are more datapoints/observations on the y-axis than later values of variable_1. The majority of data points lie below a popularity score of 50, with very few reaching above 75. 
+
+    \(2\) Thinking of the principles we learned in the week of visualization customization and Jane Miller's principles. What additional information (Please describe at least three things (at least one thing that is NOT about graph customization, such as title, color, label, etc.) that you consider adding to this table so that it can convey meaningful information. (15%) <br>
+    We need to add the following information to make this graph more meaningful. <br>
+    
+    \(1\) We need to know what variable_1 represents. Whether it is a genre of music or different genres of music or something else. Also, what does pop mean and how to interpret the numbers on each axis (their units). 
+    
+    \(2\) We need a descriptive title and more contextual information about what each point in the scatter plot represent. Whether they are individual songs, artists or something else. 
+    
+    \(3\) In order to understand the scatter plot better we can also plot regression lines to understand the trend and association between the two variables.
+
+    (For your reference, this is the original source of the dataset: <https://www.kaggle.com/datasets/leonardopena/top-spotify-songs-from-20102019-by-year>)
+
+2.  **Two articles on scientific studies talk about the "risks." Please read the titles and quotes from these two articles and answer the following two questions. (25%)**
+
+    ![](risks.png)
+
+    \(1\) Given the information provided, in which case is there a greater "risk": the Pancreatic Cancer case or the Diabetes case?<br>
+    A hazard ratio of 1.87, or twice the risk compared to those who don't drink soda, indicates that drinking two or more sodas per week is linked to a twofold increase in the risk of pancreatic cancer. At the same time, consuming a sugar-filled beverage every day increases the risk of type 2 diabetes by 18%. However, without baseline data that establishes the relative incidence of each illness, a direct comparison of these risks with regard to diabetes and pancreatic cancer is not possible.
+
+    \(2\) Think of Jane Miller's principles. What additional information would you need to know to compare the "risk" in the two cases?<br>
+    To compare the risks of drinking soda and getting pancreatic cancer or diabetes, we'd need: <br>
+    \(1\) Basic numbers on how common these diseases are among people who don't drink soda at all. This helps us see how much higher the risk is for soda drinkers.<br>
+    \(2\) Insight into the demographic variables of the study participants, such as age, lifestyle, and gender, as well as precise details of soda intake quantities.<br>
+    \(3\) A breakdown of the term 'risk' used in the studies and whether this kind of result pops up often in other research.<br>
+    \(4\) A thorough explanation of the methods used in each study, including the research designs and any controlled variables. This guarantees the analyzed cases are based on solid and trustworthy evidence.
+    
+    
+    
