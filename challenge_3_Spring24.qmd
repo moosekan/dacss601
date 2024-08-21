@@ -1,0 +1,249 @@
+---
+title: "Challenge_3: Joining Relational Data, Writing Your Own Functions, and String Operations"
+author: "Muskan Dhar"
+description: ""
+date: "3/1/2024"
+format: 
+  html: 
+    embed-resources: true
+    self-contained-math: true
+---
+
+**Make sure you change the author's name in the above YAML header.** **Name the html file as Lastname_Firstname_Challenge3.html**
+
+## Setup
+
+If you have not installed the following packages, please install them before loading them.
+
+```{r}
+#| label: setup
+#| warning: false
+#| message: false
+
+library(tidyverse)
+library(readxl)
+library(haven) #for loading other datafiles (SAS, STATA, SPSS, etc.)
+library(stringr) # if you have not installed this package, please install it.
+library(lubridate)
+```
+
+## Challenge Overview
+
+In this challenge, we will practice `join()` with relational data, use string functions to process, extract information, and mutate and clean data. We will also practice wring own functions.
+
+There will be coding components and writing components. Please read the instructions for each part and complete your challenges.
+
+## Datasets
+
+There are four datasets provided in this challenge. Please download the following dataset files from Google Classroom and save them to a folder within your project working directory (i.e.: "DACSS601_data"). If you don't have a folder to store the datasets, please create one.
+
+-   Part 1 and 2: ESS_5.dta and p5v2018.sav (used in Challenge#1) ⭐⭐
+-   Part 3: babynames.csv (used in Challenge#1) ⭐
+
+Find the `_data` folder, then use the correct R command to read the datasets.
+
+## Part 1. Joining Individual-level and Country-Level Data
+
+We have been working with ESS and Polity datasets in the previous two challenges and should be familiar with them. Suppose we have a research project that studies European citizens' social behaviors and public opinions, and we are interested in **how the countries that respondents live in influence their behavior and opinion**. In this case, we will need to combine the two data for future analysis.
+
+1.  **Read the two raw datasets.**
+
+    **For ESS_5: (1) keep only the following columns:** *idno, essround, male, age, edu, eth_major, income_10, cntry, vote**.*** **(2)** recode *essround* to 2010, and rename it as *year*.
+
+    **For Polity V, keep the first 10 columns.**
+
+```{r}
+#Type your code here
+
+ESS_5_data <- read_dta("DACSS601_data/ESS_5.dta")
+ESS_5_data <- ESS_5_data[, c("idno", "essround", "male", "age", "edu", "eth_major", "income_10", "cntry", "vote")]
+
+#recoding essround to 2010 
+ESS_5_data <- ESS_5_data %>%
+  mutate(year = ifelse(essround == 5, 2010, essround)) %>%
+  select(idno, year, everything())
+ESS_5_data <- ESS_5_data %>%
+  select(-essround)
+
+print(ESS_5_data)
+
+polity_5_data <- read_sav("DACSS601_data/p5v2018.sav")
+polity_5_data <- polity_5_data[, 1:10]
+
+print(polity_5_data)
+
+
+```
+
+2.  **Answer the following questions:**
+
+    \(1\) In this project, what is our unit of analysis? Which is the primary data, and which is the foreign data? <br> 
+    The unit of analysis in the ESS_5_data are the individual people giving the survey <br> 
+    The unit of analysis in the polity_5_data is country level observations. <br> 
+    The primary data is ESS_5_data and the foreign data is polity_5_data. 
+    
+
+    \(2\) What is(are) the key(s) for the two data?<br>
+    The key for ESS_5_data is idno and for polity_5_data the key is cyear. 
+    
+
+3.  **Suppose we have a theory that a country's level of democracy (*democ* in Polity V) affects an individual's electoral participation (*vote* in ESS 5). We must first conduct some necessary data transformation before merging the two data.**
+
+    \(1\) Countries in ESS_5 are coded with their 2-digit codes (ISO-3166-1) in the *cntry* column. It is difficult to identify from these two-letter abbreviations. Let's first transform the *cntry* column by changing it from the abbreviations to the full country names and renaming the column as *country.*
+
+    Please refer to [this website](https://datahub.io/core/country-list) for the list of countries with their 2-letter abbreviations. Read the [country list (csv) file](https://datahub.io/core/country-list/r/data.csv), into RStudio, and merge it with the ESS_5 data. By doing so, you add a new "country" column to the existing ESS_5 data.
+
+    ```{r}
+    #Type your code here
+    countries <- read.csv("DACSS601_data/country_abb.csv")
+
+    
+    countries <- countries|>
+      rename(cntry = Code)|>
+      rename(country = Name)
+    
+   ESS_5_data<-ESS_5_data|>
+      left_join(countries, by = "cntry")
+
+    head(ESS_5_data)
+    ```
+
+    \(2\) What column(s) will we use as a matching key(s) for combining the updated ESS_5 dataset and Polity V dataset? Note: you can use multiple matching strategies, but I suggest we create a common matching key for both data if there are 
+    
+    We will first need to filter the polity_5 dataset by year 2010 and then "country" column and "year" column can be used as a common matching key which can later be used to merge ESS_5 data and polity_5 data.<br>
+    
+    ```{r}
+    polity_5_data<-filter(polity_5_data, year == 2010)
+    head(polity_5_data)
+    ```
+
+    
+
+    \(3\) Join the two data (updated ESS_5 and Polity V). Please print the first few entries as a sanity check. Name the joined data as "ESS_Polity"
+
+    ```{r}
+    #Type your code here
+    ESS_Polity <- left_join(ESS_5_data, polity_5_data, by = c("country"))
+    head(ESS_Polity)
+    ```
+
+    \(4\) Save the joined data *ESS_Polity* to your local directory using the following code. We will be using this joined data to explore visualization in future challenges. (This is for future usage. No need to submit the saved joined data.)
+
+    ```{r}
+    write_csv(ESS_Polity, "ESS_Polity.csv")
+
+
+    ```
+
+4.  **Describe the data structure of the newly joined data *ESS_Polity*. What is its dimension (# of rows and \# of columns)? What is its unit of observation? Compared to the original ESS_5 data, does the above data combination change the dimension and unit of observation?**
+
+    ```{r}
+    #Type your code here
+    #colnames(ESS_Polity)
+    dim(ESS_Polity)
+    ```
+
+The newly joined data "ESS_Polity" is a tibble. The dimension of ESS_Polity is 52458 rows and 19 columns. The unit of observation is a row where every row represents the details of a country for the year 2010 and the details of the different people who participated in a survey with responses measuring democracy or autocracy. Yes compared to the original ESS_5 data the dimension of the new ESS_Polity data changes (number of rows remain the same but the number of column increase due to the join operation) but the unit of observation does not change. 
+
+
+## Part 2. Writing Your Own Functions
+
+Please use the joined data ***ESS_Polity*** in Part 1 and write **ONE** function to complete all the following tasks:
+
+\(1\) Estimate the range, average, standard deviation, number of NAs, and the number of unique values of any given numeric-type (double or integer) columns.
+
+\(2\) Test your function with any four columns of your choice.
+
+```{r}
+#Type your code here
+stat_column <- function(data, coln) {
+  colname <- data[[coln]]
+  range_val <- range(colname, na.rm = TRUE) 
+  average <- mean(colname, na.rm = TRUE)
+  stddev <- sd(colname, na.rm = TRUE)
+  num_na <- sum(is.na(colname))
+  num_unique <- length(unique(na.omit(colname)))
+  
+  print("Range is")
+  print(range_val)
+  print(paste("Average of", coln, "is", average))
+  print(paste("Standard Deviation of", coln, "is", stddev))
+  print(paste("Number of NAs of", coln, "is", num_na))
+  print(paste("Number of unique values of", coln, "are", num_unique))
+
+  
+  
+}
+#Col 1 is age
+stat_column(ESS_5_data, "age")
+#col 2 is income_10
+stat_column(ESS_5_data, "income_10")
+#col 3 is vote
+stat_column(ESS_5_data, "eth_major")
+#col 4 is edu
+stat_column(ESS_5_data, "edu")
+```
+
+## Part 3. Practicing Stringr Package with Babynames
+
+1.  **Import the babynames data:**
+
+```{r}
+#Type your code here
+babynames <- read.csv("DACSS601_data/babynames.csv")
+head(babynames)
+```
+
+2.  **Use different string functions from stringr package to answer the following questions:**
+
+    \(1\) Find and list the longest names using [count()](https://dplyr.tidyverse.org/reference/count.html) and a string function.
+    ```{r}
+    
+longest_names <- babynames %>%
+  count(Name) %>%
+  mutate(length = str_length(Name)) %>%
+  filter(length == max(length)) %>%
+  select(Name)
+
+longest_names
+    ```
+
+    \(2\) Use a string function to detect if the following names are present in the data:
+
+    "Ronaldo", "Messi", "Wayne", "Clarck", "Rick", and "Morty".
+    ```{r}
+    #Use the Anchoring (a way of regular expression), "^name$", to specify the name that you search for. By using Anchoring ("^"and"$"), you can search the exact name by specifying the beginning and the ending letters.
+
+ns <- c("Ronaldo", "Messi", "Wayne", "Clarck", "Rick", "Morty")
+    
+for (name in ns) {
+  if (any(str_detect(babynames$Name, paste0("^", name, "$")))) {
+    cat(name, "is present in the data.\n")
+  } else {
+    cat(name, "is not present in the data.\n")
+  }
+}
+    
+    
+    ```
+
+    \(3\) Create a column *LastName* with just one value, "LastName". Next, create another column *FullName,* by combing the strings of columns *name* and *LastName*, separating by a period. For example, a value in this new column should be like "Jacky.LastName".
+    
+    ```{r}
+    
+    babynames$LastName <- "LastName"
+    babynames$FullName <- paste(babynames$Name, babynames$LastName, sep = ".")
+    head(babynames)
+    
+    ```
+
+    \(4\) Find all "Elizabeth" in the data and replace "Elizabeth" with "Liz".
+
+```{r}
+#Type your code here
+babynames <- babynames %>%
+  mutate(Name = str_replace_all(Name, "Elizabeth", "Liz"),
+         FullName = str_replace_all(FullName, "Elizabeth", "Liz"))
+
+babynames
+```
